@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Answer Bot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> 
+    <style>
+        :root {
+            --primary-color: #6c5ce7;
+            --secondary-color: #a29bfe;
+            --accent-color: #fd79a8;
+            --dark-color: #2d3436;
+            --light-color: #f5f6fa;
+            --success-color: #00b894;
+            --warning-color: #fdcb6e;
+            --error-color: #d63031;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--dark-color);
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 500px;
+            height: 90vh;
+            max-height: 800px;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            margin: 20px;
+            position: relative;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .chat-header img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-image: radial-gradient(circle at 10px 10px, rgba(108, 92, 231, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.4;
+            animation: fadeIn 0.3s ease-out;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background-color: white;
+            color: var(--dark-color);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .chat-input-container {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            background-color: white;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 30px;
+            outline: none;
+            font-size: 1rem;
+            background-color: var(--light-color);
+            transition: all 0.3s ease;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        #send-button {
+            margin-left: 10px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .typing-indicator {
+            display: none;
+            align-self: flex-start;
+            padding: 12px 16px;
+            background-color: white;
+            border-radius: 18px;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: var(--secondary-color);
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+
+        .timestamp {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        .image-response {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-top: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-caption {
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 5px;
+            font-style: italic;
+            color: #666;
+        }
+
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 10px 15px;
+            background-color: white;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .suggestion-chip {
+            padding: 8px 15px;
+            background-color: var(--light-color);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .suggestion-chip:hover {
+            background-color: var(--secondary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .option-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .option-button {
+            padding: 8px 15px;
+            background-color: var(--light-color);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            outline: none;
+        }
+
+        .option-button:hover {
+            background-color: var(--secondary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            .chat-container {
+                margin: 0;
+                border-radius: 0;
+                height: 100vh;
+                max-height: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="chat-header">
+        <img src="profil.png" alt="Bot Profile">
+        <span>Kruyo Kros Bot</span>
+    </div>
+
+    <div class="chat-messages" id="chat-messages">
+        <div class="message bot-message new-message">👋 Halo! Aku bot cerdas yang bisa menjawab pertanyaan spesifik.</div>
+        <div class="message bot-message new-message">
+            <i class="fas fa-heart"></i> "punya istri?"<br>
+            <i class="fas fa-user"></i> "musisi favorit?"<br>
+            <i class="fas fa-birthday-cake"></i> "lahir kapan?"
+        </div>
+        <div class="typing-indicator" id="typing-indicator">
+            Bot sedang mengetik <span></span><span></span><span></span>
+        </div>
+    </div>
+
+    <div class="suggestions" id="suggestions">
+        <div class="suggestion-chip">makan dengan?</div>
+        <div class="suggestion-chip">genre musik favorit?</div>
+        <div class="suggestion-chip">musisi favorit?</div>
+        <div class="suggestion-chip">ultah?</div>
+        <div class="suggestion-chip">hobby?</div>
+        <div class="suggestion-chip">punya istri?</div>
+        <div class="suggestion-chip">pernah pacaran?</div>
+    </div>
+
+    <div class="chat-input-container">
+        <input type="text" id="user-input" placeholder="Ketik pesan..." autofocus>
+        <button id="send-button"><i class="fas fa-paper-plane"></i></button>
+    </div>
+</div>
+
+<!-- Audio -->
+<audio id="notifySound" src="./sounds/notification.mp3"></audio>
+<audio id="musicPlayer" src="./aii/Kendrick.mp3"></audio>
+
+<script>
+    const chatMessages = document.getElementById('chat-messages');
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-button');
+    const typingIndicator = document.getElementById('typing-indicator');
+
+    const notifySound = document.getElementById('notifySound');
+    const musicPlayer = document.getElementById('musicPlayer');
+
+    // Knowledge Base
+    const knowledgeBase = {
+        "makan": "Nasi adalah makanan pokok saya",
+        "makan dengan": "Saya biasanya makan dengan nasi",
+        "makan pakai": "Saya lebih suka makan dengan nasi",
+        "makanannya": "Makanan favorit saya adalah nasi",
+        "genre musik": "Saya sangat menyukai musik hip-hop",
+        "genre musik favorit": "Genre musik favorit saya adalah hip-hop",
+        "artis musik": "Artis favorit saya adalah Kendrick Lamar",
+        "penyanyi favorit": "Penyanyi favorit saya adalah Kendrick Lamar",
+        "musisi favorit": "Musisi favorit saya adalah Kendrick Lamar",
+        "lahir": "Saya lahir pada 30 Januari 2008",
+        "lahir kapan": "Tanggal lahir saya adalah 30 Januari 2008",
+        "tanggal lahir": "Saya lahir pada tanggal 30 Januari 2008",
+        "ultah": "Ulang tahun saya jatuh pada 30 Januari 2008",
+        "hobi": "Hobi saya adalah membaca manga dan manhwa",
+        "hobby": "Saya sangat menikmati membaca manga dan manhwa di waktu luang",
+        "pacaran": "Saya belum pernah berpacaran (0)",
+        "pernah pacaran": "Jumlah orang yang pernah saya pacari adalah 0",
+        "istri": "Ini foto istri saya",
+        "punya istri": "Ini foto istri saya"
+    };
+
+    // Image & Music Responses
+    const imageResponses = {
+        
+        "musisi favorit": {
+            imageUrl: "./aii/Kendrick.jpg",
+            caption: "ini musisi favorit saya 🎤",
+            audioUrl: "./aii/Kendrick.mp3"
+        },
+        "istri1": {
+            imageUrl: "./aii/istri1.jpg",
+            caption: "Ini istri pertama saya ❤️"
+        },
+        "istri2": {
+            imageUrl: "./aii/istri2.jpg",
+            caption: "Ini istri kedua saya 💕"
+        },
+        "istri3": {
+            imageUrl: "./aii/istri3.jpg",
+            caption: "Ini istri ketiga saya 💖"
+        },
+        "istri4": {
+            imageUrl: "./aii/istri4.jpg",
+            caption: "Ini istri keempat saya 💗"
+        },
+        "istri5": {
+            imageUrl: "./aii/istri5.jpg",
+            caption: "Ini istri kelima saya 💓"
+        }
+    };
+
+    function getCurrentTime() {
+        const now = new Date();
+        return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function addMessage(text, isUser) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message');
+        messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
+        messageDiv.classList.add('new-message');
+        messageDiv.innerHTML = text;
+
+        const timeSpan = document.createElement('div');
+        timeSpan.classList.add('timestamp');
+        timeSpan.textContent = getCurrentTime();
+        messageDiv.appendChild(timeSpan);
+
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        setTimeout(() => messageDiv.classList.remove('new-message'), 300);
+    }
+
+    function addImageMessage(imageUrl, caption, text = "", audioUrl = null) {
+        // Stop any currently playing music first
+        stopMusic();
+
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', 'bot-message', 'new-message');
+        if (text) messageDiv.innerHTML = text + '<br>';
+
+        const img = document.createElement('img');
+        img.src = imageUrl;
+        img.alt = caption;
+        img.classList.add('image-response');
+        messageDiv.appendChild(img);
+
+        const captionDiv = document.createElement('div');
+        captionDiv.classList.add('image-caption');
+        captionDiv.textContent = caption;
+        messageDiv.appendChild(captionDiv);
+
+        const timeSpan = document.createElement('div');
+        timeSpan.classList.add('timestamp');
+        timeSpan.textContent = getCurrentTime();
+        messageDiv.appendChild(timeSpan);
+
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        setTimeout(() => messageDiv.classList.remove('new-message'), 300);
+
+        if (audioUrl) {
+            playMusic(audioUrl);
+        }
+    }
+
+    function stopMusic() {
+        musicPlayer.pause();
+        musicPlayer.currentTime = 0;
+    }
+
+    function playMusic(audioUrl) {
+        stopMusic();
+        musicPlayer.src = audioUrl;
+        musicPlayer.play().catch(() => {
+            console.warn("Autoplay diblokir oleh browser.");
+        });
+    }
+
+    function showWifeOptions() {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', 'bot-message', 'new-message');
+        messageDiv.innerHTML = "Istri yang keberapa?";
+        
+        const optionsDiv = document.createElement('div');
+        optionsDiv.classList.add('option-buttons');
+        
+        for (let i = 1; i <= 5; i++) {
+            const button = document.createElement('button');
+            button.classList.add('option-button');
+            button.textContent = i;
+            button.addEventListener('click', () => {
+                stopMusic();
+                addMessage(`Istri ke-${i}`, true);
+                
+                // Show the corresponding wife image and response
+                setTimeout(() => {
+                    const responses = [
+                        "Istri pertama saya yang paling spesial",
+                        "Istri kedua saya juga sangat baik",
+                        "Istri ketiga saya adalah yang paling cantik",
+                        "Istri keempat saya adalah yang paling pengertian",
+                        "Istri kelima saya adalah yang paling setia"
+                    ];
+                    
+                    const wifeKey = `istri${i}`;
+                    if (imageResponses[wifeKey]) {
+                        const { imageUrl, caption } = imageResponses[wifeKey];
+                        addImageMessage(imageUrl, caption, responses[i-1]);
+                    } else {
+                        addMessage(responses[i-1], false);
+                    }
+                    
+                    playNotification();
+                }, 1000);
+            });
+            optionsDiv.appendChild(button);
+        }
+        
+        messageDiv.appendChild(optionsDiv);
+        
+        const timeSpan = document.createElement('div');
+        timeSpan.classList.add('timestamp');
+        timeSpan.textContent = getCurrentTime();
+        messageDiv.appendChild(timeSpan);
+        
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        setTimeout(() => messageDiv.classList.remove('new-message'), 300);
+    }
+
+    function playNotification() {
+        notifySound.currentTime = 0;
+        notifySound.play().catch(() => {});
+    }
+
+    function processInput() {
+        const inputText = userInput.value.trim();
+        if (!inputText) return;
+
+        // Stop any currently playing music when new input is received
+        stopMusic();
+
+        addMessage(inputText, true);
+        userInput.value = '';
+        typingIndicator.style.display = 'block';
+
+        setTimeout(() => {
+            typingIndicator.style.display = 'none';
+            const lowerInput = inputText.toLowerCase();
+            let response = "Maaf, saya tidak mengerti pertanyaan Anda.";
+            let found = false;
+
+            for (const [question, answer] of Object.entries(knowledgeBase)) {
+                if (lowerInput.includes(question.toLowerCase())) {
+                    response = answer;
+                    found = true;
+
+                    if (imageResponses[question]) {
+                        const { imageUrl, caption, audioUrl } = imageResponses[question];
+                        setTimeout(() => {
+                            if (question === "punya istri" || question === "istri") {
+                                addImageMessage(imageUrl, caption, response, audioUrl);
+                                setTimeout(showWifeOptions, 1000);
+                            } else {
+                                addImageMessage(imageUrl, caption, response, audioUrl);
+                            }
+                        }, 500);
+                    } else if (question === "punya istri" || question === "istri") {
+                        setTimeout(showWifeOptions, 500);
+                    }
+
+                    break;
+                }
+            }
+
+            if (found && !imageResponses[lowerInput] && !(lowerInput.includes("istri") || lowerInput.includes("punya istri"))) {
+                addMessage(response, false);
+            }
+
+            playNotification();
+        }, 1000 + Math.random() * 1000);
+    }
+
+    sendButton.addEventListener('click', processInput);
+    userInput.addEventListener('keypress', e => {
+        if (e.key === 'Enter') processInput();
+    });
+
+    document.querySelectorAll('.suggestion-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            stopMusic();
+            userInput.value = chip.textContent;
+            processInput();
+        });
+    });
+
+    window.onload = () => {
+        addMessage("Silakan klik saran atau tanyakan langsung!", false);
+    };
+</script>
+</body>
+</html>
