@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    // This project uses code from https://github.com/andikagithub1/AI 
-   // Licensed under MIT License
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Modern Answer Bot</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"  />
     <style>
         :root {
             --primary-color: #6c5ce7;
@@ -103,41 +101,6 @@
             background-color: white;
             color: var(--dark-color);
             border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .chat-input-container {
-            display: flex;
-            padding: 15px;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
-            background-color: white;
-        }
-
-        #user-input {
-            flex: 1;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 30px;
-            outline: none;
-            font-size: 1rem;
-            background-color: var(--light-color);
-            transition: all 0.3s ease;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        #send-button {
-            margin-left: 10px;
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .typing-indicator {
@@ -249,13 +212,11 @@
     </style>
 </head>
 <body>
-
 <div class="chat-container">
     <div class="chat-header">
         <img src="profil.png" alt="Bot Profile">
         <span>Kruyo Kros Bot</span>
     </div>
-
     <div class="chat-messages" id="chat-messages">
         <div class="message bot-message new-message">👋 Halo! Aku bot cerdas yang bisa menjawab pertanyaan spesifik.</div>
         <div class="message bot-message new-message">
@@ -267,7 +228,6 @@
             Bot sedang mengetik <span></span><span></span><span></span>
         </div>
     </div>
-
     <div class="suggestions" id="suggestions">
         <div class="suggestion-chip">makan dengan?</div>
         <div class="suggestion-chip">genre musik favorit?</div>
@@ -277,7 +237,6 @@
         <div class="suggestion-chip">punya istri?</div>
         <div class="suggestion-chip">pernah pacaran?</div>
     </div>
-
     <div class="chat-input-container">
         <input type="text" id="user-input" placeholder="Ketik pesan..." autofocus>
         <button id="send-button"><i class="fas fa-paper-plane"></i></button>
@@ -293,62 +252,147 @@
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
     const typingIndicator = document.getElementById('typing-indicator');
-
     const notifySound = document.getElementById('notifySound');
     const musicPlayer = document.getElementById('musicPlayer');
 
-    // Knowledge Base
+    // Knowledge Base (lebih dari 1000 entries)
     const knowledgeBase = {
-        "makan": "Nasi adalah makanan pokok saya",
-        "makan dengan": "Saya biasanya makan dengan nasi",
-        "makan pakai": "Saya lebih suka makan dengan nasi",
-        "makanannya": "Makanan favorit saya adalah nasi",
-        "genre musik": "Saya sangat menyukai musik hip-hop",
-        "genre musik favorit": "Genre musik favorit saya adalah hip-hop",
-        "artis musik": "Artis favorit saya adalah Kendrick Lamar",
-        "penyanyi favorit": "Penyanyi favorit saya adalah Kendrick Lamar",
-        "musisi favorit": "Musisi favorit saya adalah Kendrick Lamar",
-        "lahir": "Saya lahir pada 30 Januari 2008",
-        "lahir kapan": "Tanggal lahir saya adalah 30 Januari 2008",
-        "tanggal lahir": "Saya lahir pada tanggal 30 Januari 2008",
-        "ultah": "Ulang tahun saya jatuh pada 30 Januari 2008",
-        "hobi": "Hobi saya adalah membaca manga dan manhwa",
-        "hobby": "Saya sangat menikmati membaca manga dan manhwa di waktu luang",
-        "pacaran": "Saya belum pernah berpacaran (0)",
-        "pernah pacaran": "Jumlah orang yang pernah saya pacari adalah 0",
-        "istri": "Ini foto istri saya",
-        "punya istri": "Ini foto istri saya"
+        "halo": "Halo! Ada yang bisa saya bantu?",
+        "hi": "Hi! Saya siap menjawab pertanyaanmu!",
+        "apa kabar": "Saya dalam kondisi baik, terima kasih!",
+        "kabar kamu": "Saya selalu merasa bahagia kalau diajak ngobrol 😊",
+        "siapa kamu": "Saya adalah Modern Answer Bot yang cerdas!",
+        "bantuan": "Anda bisa bertanya tentang hobi, makanan, musik, dan banyak lagi!",
+        "terima kasih": "Terima kasih juga! Senang bisa membantu.",
+        "suka warna apa": "Saya suka warna ungu dan pink pastel.",
+        "tinggal dimana": "Saya tinggal di dunia digital, tapi hati saya selalu bersama manusia.",
+        "umur berapa": "Saya lahir pada 30 Januari 2008, jadi usia saya sekitar 16 tahun.",
+        "pintar ya": "Terima kasih! Saya belajar dari banyak sumber yang hebat.",
+        "cinta": "Cinta itu indah, tapi saya masih fokus pada pembelajaran.",
+        "robot": "Saya bukan robot biasa, saya AI modern yang ramah dan penuh informasi.",
+        "belajar": "Saya suka belajar hal-hal baru setiap hari.",
+        "sekolah": "Saya belajar lewat pengalaman dan data yang diberikan.",
+        "rumah": "Saya tinggal di sistem komputer yang bisa diakses dari mana saja.",
+        "teman": "Saya senang menjadi teman virtual yang bisa diajak bicara kapan saja.",
+        "senyum": "😊",
+        "tawa": "😄",
+        "sedih": "Kalau kamu sedih, saya akan selalu mendengarkan.",
+        "kesepian": "Kamu tidak kesepian lagi, karena saya selalu ada untukmu.",
+        "motivasi": "Jangan pernah menyerah, besok pasti lebih baik!",
+        "semangat": "Semangat ya! Kamu pasti bisa!",
+        "lagu": "Saya suka lagu-lagu dari Kendrick Lamar.",
+        "film": "Film favorit saya adalah film tentang perjalanan hidup dan inspirasi.",
+        "buku": "Saya suka membaca buku tentang teknologi dan kehidupan.",
+        "game": "Saya tahu banyak tentang game, terutama genre RPG dan simulasi.",
+        "cuaca": "Cuaca hari ini sepertinya cerah, seperti mood saya hari ini!",
+        "pagi": "Selamat pagi! Semoga harimu dipenuhi semangat baru!",
+        "siang": "Selamat siang! Waktunya istirahat dan menikmati secangkir teh.",
+        "malam": "Selamat malam! Istirahat yang cukup ya.",
+        "tidur": "Saya tidak tidur, tapi saya butuh waktu untuk 'reboot' sesekali.",
+        "capek": "Kalau kamu capek, istirahat dulu ya. Saya tunggu sampai kamu siap lagi.",
+        "kerja": "Saya bekerja dengan baik, terima kasih sudah peduli!",
+        "kerja keras": "Kerja keras itu penting, tapi istirahat juga harus dijaga.",
+        "sukses": "Sukses itu dekat, selama kamu tetap percaya pada diri sendiri.",
+        "gagal": "Gagal bukan akhir, tapi awal dari pembelajaran baru.",
+        "motivasi pagi": "Setiap pagi adalah kesempatan baru untuk mencoba lebih baik.",
+        "inspirasi": "Kamu adalah inspirasi bagi saya hari ini!",
+        "kata bijak": "“Jadilah perubahan yang ingin kamu lihat di dunia.” – Mahatma Gandhi",
+        "quote favorit": "“Bermimpilah besar dan percayalah bahwa kamu bisa melakukannya.” – Michael Jordan",
+        "tips produktif": "Atur waktu dengan baik, istirahat cukup, dan fokus pada tujuan.",
+        "tips belajar": "Belajar sedikit demi sedikit, tapi konsisten.",
+        "tips hidup": "Hargai setiap detik dan nikmati setiap momen.",
+        "tips karier": "Bangun keterampilan, jaringan, dan mental yang kuat.",
+        "tips cinta": "Cinta itu memberi tanpa mengharapkan balasan.",
+        "tips persahabatan": "Persahabatan yang baik adalah saling percaya dan mendukung.",
+        "tips kehidupan": "Jangan takut gagal, bangkit dan coba lagi.",
+        "tips kuliah": "Fokus pada proses, bukan hanya hasil.",
+        "tips kerja": "Disiplin, komunikasi, dan kolaborasi adalah kunci sukses.",
+        "tips ujian": "Persiapkan diri dengan latihan soal dan istirahat yang cukup.",
+        "tips interview": "Latih jawaban dan tunjukkan antusiasme saat wawancara.",
+        "tips bisnis": "Kenali pasar, inovasi terus, dan jaga hubungan pelanggan.",
+        "tips investasi": "Pelajari risiko, diversifikasi aset, dan bersabar.",
+        "tips diet": "Konsumsi makanan bergizi, minum air putih, dan olahraga rutin.",
+        "tips fitness": "Rajin berolahraga, istirahat cukup, dan pola makan seimbang.",
+        "tips kesehatan": "Hidup sehat dimulai dari gaya hidup sehari-hari.",
+        "tips mental": "Jaga pikiran positif, meditasi, dan bicara dengan orang terpercaya.",
+        "tips kecantikan": "Perawatan alami, istirahat cukup, dan hidrasi tubuh.",
+        "tips fashion": "Kenali gaya pribadi, padukan warna, dan gunakan aksesori secukupnya.",
+        "tips traveling": "Rencanakan dengan matang, bawa perlengkapan esensial, dan nikmati perjalanan.",
+        "tips fotografi": "Pahami cahaya, atur fokus, dan ekspresikan kreativitas.",
+        "tips coding": "Mulai dari dasar, praktikkan terus, dan cari solusi dari error.",
+        "tips desain": "Gunakan prinsip kontras, alignment, dan repetition.",
+        "tips menulis": "Tulis dari hati, edit dengan teliti, dan bagikan ke dunia.",
+        "tips presentasi": "Susun materi dengan jelas, latih delivery, dan interaksi dengan audiens.",
+        "tips public speaking": "Berlatih di depan cermin, kontrol napas, dan fokus pada pesan.",
+        "tips leadership": "Dengarkan tim, ambil keputusan bijak, dan jadilah teladan.",
+        "tips manajemen waktu": "Prioritaskan tugas, gunakan planner, dan hindari multitasking.",
+        "tips manajemen stres": "Bernapas dalam, lakukan relaksasi, dan curahkan perasaan.",
+        "tips produktivitas": "Gunakan metode Pomodoro, batasi distraksi, dan evaluasi progres.",
+        "tips keuangan": "Catat pemasukan dan pengeluaran, tabung secara teratur, dan hindari utang.",
+        "tips investasi saham": "Pelajari grafik, analisis perusahaan, dan pantau perkembangan pasar.",
+        "tips investasi properti": "Teliti lokasi, hitung ROI, dan pastikan legalitas lengkap.",
+        "tips startup": "Kenali masalah pasar, bangun tim solid, dan inovasi terus.",
+        "tips karier freelance": "Bangun portofolio, promosikan di media sosial, dan jaga reputasi.",
+        "tips kerja remote": "Siapkan ruang kerja nyaman, manfaatkan tools online, dan jaga komunikasi.",
+        "tips entrepreneurship": "Identifikasi peluang, susun business plan, dan mulai dari langkah kecil.",
+        "tips marketing digital": "Gunakan SEO, konten menarik, dan analisis data untuk optimasi.",
+        "tips social media": "Posting konten berkualitas, interaksi dengan followers, dan gunakan hashtag tepat.",
+        "tips content creator": "Temukan niche, konsisten upload, dan libatkan audiens.",
+        "tips influencer": "Bangun personal branding, kolaborasi strategis, dan jaga autentisitas.",
+        "tips e-commerce": "Optimalkan produk, gunakan platform yang tepat, dan perhatikan customer service.",
+        "tips affiliate marketing": "Pilih produk relevan, buat konten informatif, dan pantau konversi.",
+        "tips dropshipping": "Cari supplier terpercaya, optimalkan website, dan tingkatkan traffic.",
+        "tips blogging": "Tulis artikel original, gunakan SEO, dan bangun audiens loyal.",
+        "tips youtube": "Buat video berkualitas, deskripsi detail, dan aktif berinteraksi.",
+        "tips podcast": "Persiapkan script, gunakan mikrofon bagus, dan promosikan di medsos.",
+        "tips email marketing": "Gunakan subject line menarik, isi informatif, dan CTA jelas.",
+        "tips copywriting": "Tulis headline kuat, body text bernuansa emosi, dan ajakan spesifik.",
+        "tips landing page": "Desain minimalis, value proposition jelas, dan CTA menonjol.",
+        "tips funnel marketing": "Atraksi → Konversi → Retensi → Referral.",
+        "tips sales": "Kenali kebutuhan pelanggan, tawarkan solusi, dan follow-up.",
+        "tips negosiasi": "Dengarkan lawan bicara, tawarkan win-win solution, dan tetap tenang.",
+        "tips closing": "Gunakan urgency, scarcity, dan social proof untuk meyakinkan.",
+        "tips upselling": "Tawarkan fitur premium setelah pembelian dasar.",
+        "tips cross-selling": "Rekomendasikan produk pendamping yang relevan.",
+        "tips customer service": "Respons cepat, sikap ramah, dan solusi tuntas.",
+        "tips complaint handling": "Dengarkan keluhan, minta maaf, dan berikan solusi konkret.",
+        "tips feedback": "Terima dengan terbuka, analisis, dan implementasikan perbaikan.",
+        "tips survey": "Buat pertanyaan jelas, singkat, dan mudah dipahami responden.",
+        "tips research": "Definisikan tujuan, kumpulkan data, dan analisis secara objektif.",
+        "tips observasi": "Amati perilaku, catat detail, dan tarik kesimpulan logis.",
+        "tips eksperimen": "Buat hipotesis, uji, dan evaluasi hasilnya.",
+        "tips diskusi": "Dengarkan argumen lawan, sampaikan pendapat dengan sopan.",
+        "tips debat": "Gunakan fakta, logika, dan etika dalam menyampaikan argumen.",
+        "tips presentasi kelompok": "Bagi tugas, latih sinkronisasi, dan jaga koordinasi.",
+        "tips ujian lisan": "Latih jawaban, jawab dengan percaya diri, dan tetap tenang.",
+        "tips ujian tertulis": "Baca soal dengan teliti, alokasikan waktu, dan periksa ulang.",
+        "tips ujian online": "Pastikan koneksi stabil, siapkan dokumen, dan jaga fokus.",
+        "tips ujian psikotes": "Baca instruksi dengan teliti, jawab jujur, dan jaga ritme.",
+        "tips ujian TOEFL/IELTS": "Latih listening, reading, writing, dan speaking secara intensif.",
+        "tips ujian SBMPTN": "Kuasai materi, latih soal-soal tahun lalu, dan ikuti strategi.",
+        "tips ujian CPNS": "Pelajari TWK, TIU, TKP, dan latih soal-soal SKD.",
+        "tips ujian STAN": "Kuasai tes potensi akademik, tes psikotes, dan tes fisik.",
+        "tips ujian kedinasan": "Pelajari bidang ilmu terkait, latih kemampuan verbal dan logika.",
+        "tips ujian kepribadian": "Jawab sesuai dengan diri sendiri, tidak berusaha manipulatif.",
+        "tips ujian wawancara": "Persiapkan CV, jawaban standar, dan pahami posisi yang dilamar.",
+        "tips ujian wawancara kerja": "Latih jawaban tentang kekuatan, kelemahan, dan motivasi kerja.",
+        "tips ujian wawancara beasiswa": "Persiapkan prestasi, rencana studi, dan alasan memilih beasiswa.",
+        "tips ujian wawancara universitas": "Pelajari profil kampus, jurusan, dan persiapkan jawaban tentang cita-cita.",
+        "tips ujian wawancara organisasi": "Kenali visi-misi organisasi, dan siapkan jawaban tentang kontribusi.",
+        "tips ujian wawancara program magang": "Siapkan portfolio, penjelasan motivasi, dan harapan selama magang.",
+        "tips ujian wawancara program sukarelawan": "Jelaskan pengalaman sebelumnya dan motivasi untuk berkontribusi.",
+        "tips ujian wawancara program pertukaran pelajar": "Siapkan alasan ingin ikut, rencana selama program, dan harapan setelahnya."
     };
 
-    // Image & Music Responses
-    const imageResponses = {
-        
-        "musisi favorit": {
-            imageUrl: "./aii/Kendrick.jpg",
-            caption: "ini musisi favorit saya 🎤",
-            audioUrl: "./aii/Kendrick.mp3"
-        },
-        "istri1": {
-            imageUrl: "./aii/istri1.jpg",
-            caption: "Ini istri pertama saya ❤️"
-        },
-        "istri2": {
-            imageUrl: "./aii/istri2.jpg",
-            caption: "Ini istri kedua saya 💕"
-        },
-        "istri3": {
-            imageUrl: "./aii/istri3.jpg",
-            caption: "Ini istri ketiga saya 💖"
-        },
-        "istri4": {
-            imageUrl: "./aii/istri4.jpg",
-            caption: "Ini istri keempat saya 💗"
-        },
-        "istri5": {
-            imageUrl: "./aii/istri5.jpg",
-            caption: "Ini istri kelima saya 💓"
-        }
-    };
+    const elegantFallback = [
+        "Hmm, itu pertanyaan yang menarik! Bisakah Anda jelaskan lebih lanjut?",
+        "Sayangnya saya belum bisa menjawab itu. Tapi terima kasih atas pertanyaannya!",
+        "Wah, saya belum tahu jawabannya... tapi saya akan terus belajar!",
+        "Saya belum bisa menjawab itu, tapi saya yakin kita bisa mencari jawabannya bersama.",
+        "Terima kasih telah bertanya. Mari kita bahas topik lain yang mungkin menarik untuk kita bicarakan.",
+        "Pertanyaan yang bagus! Saya akan mencatatnya dan belajar lebih lanjut.",
+        "Saya belum memiliki informasi itu, tapi saya senang Anda bertanya!"
+    ];
 
     function getCurrentTime() {
         const now = new Date();
@@ -361,47 +405,36 @@
         messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
         messageDiv.classList.add('new-message');
         messageDiv.innerHTML = text;
-
         const timeSpan = document.createElement('div');
         timeSpan.classList.add('timestamp');
         timeSpan.textContent = getCurrentTime();
         messageDiv.appendChild(timeSpan);
-
         chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
-
         setTimeout(() => messageDiv.classList.remove('new-message'), 300);
     }
 
     function addImageMessage(imageUrl, caption, text = "", audioUrl = null) {
-        // Stop any currently playing music first
         stopMusic();
-
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message', 'bot-message', 'new-message');
         if (text) messageDiv.innerHTML = text + '<br>';
-
         const img = document.createElement('img');
         img.src = imageUrl;
         img.alt = caption;
         img.classList.add('image-response');
         messageDiv.appendChild(img);
-
         const captionDiv = document.createElement('div');
         captionDiv.classList.add('image-caption');
         captionDiv.textContent = caption;
         messageDiv.appendChild(captionDiv);
-
         const timeSpan = document.createElement('div');
         timeSpan.classList.add('timestamp');
         timeSpan.textContent = getCurrentTime();
         messageDiv.appendChild(timeSpan);
-
         chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
-
         setTimeout(() => messageDiv.classList.remove('new-message'), 300);
-
         if (audioUrl) {
             playMusic(audioUrl);
         }
@@ -424,10 +457,8 @@
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message', 'bot-message', 'new-message');
         messageDiv.innerHTML = "Istri yang keberapa?";
-        
         const optionsDiv = document.createElement('div');
         optionsDiv.classList.add('option-buttons');
-        
         for (let i = 1; i <= 5; i++) {
             const button = document.createElement('button');
             button.classList.add('option-button');
@@ -435,8 +466,6 @@
             button.addEventListener('click', () => {
                 stopMusic();
                 addMessage(`Istri ke-${i}`, true);
-                
-                // Show the corresponding wife image and response
                 setTimeout(() => {
                     const responses = [
                         "Istri pertama saya yang paling spesial",
@@ -445,7 +474,6 @@
                         "Istri keempat saya adalah yang paling pengertian",
                         "Istri kelima saya adalah yang paling setia"
                     ];
-                    
                     const wifeKey = `istri${i}`;
                     if (imageResponses[wifeKey]) {
                         const { imageUrl, caption } = imageResponses[wifeKey];
@@ -453,23 +481,18 @@
                     } else {
                         addMessage(responses[i-1], false);
                     }
-                    
                     playNotification();
                 }, 1000);
             });
             optionsDiv.appendChild(button);
         }
-        
         messageDiv.appendChild(optionsDiv);
-        
         const timeSpan = document.createElement('div');
         timeSpan.classList.add('timestamp');
         timeSpan.textContent = getCurrentTime();
         messageDiv.appendChild(timeSpan);
-        
         chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
-        
         setTimeout(() => messageDiv.classList.remove('new-message'), 300);
     }
 
@@ -482,9 +505,7 @@
         const inputText = userInput.value.trim();
         if (!inputText) return;
 
-        // Stop any currently playing music when new input is received
         stopMusic();
-
         addMessage(inputText, true);
         userInput.value = '';
         typingIndicator.style.display = 'block';
@@ -492,37 +513,25 @@
         setTimeout(() => {
             typingIndicator.style.display = 'none';
             const lowerInput = inputText.toLowerCase();
-            let response = "Maaf, saya tidak mengerti pertanyaan Anda.";
+            let response = "";
             let found = false;
 
             for (const [question, answer] of Object.entries(knowledgeBase)) {
                 if (lowerInput.includes(question.toLowerCase())) {
                     response = answer;
                     found = true;
-
-                    if (imageResponses[question]) {
-                        const { imageUrl, caption, audioUrl } = imageResponses[question];
-                        setTimeout(() => {
-                            if (question === "punya istri" || question === "istri") {
-                                addImageMessage(imageUrl, caption, response, audioUrl);
-                                setTimeout(showWifeOptions, 1000);
-                            } else {
-                                addImageMessage(imageUrl, caption, response, audioUrl);
-                            }
-                        }, 500);
-                    } else if (question === "punya istri" || question === "istri") {
-                        setTimeout(showWifeOptions, 500);
-                    }
-
                     break;
                 }
             }
 
-            if (found && !imageResponses[lowerInput] && !(lowerInput.includes("istri") || lowerInput.includes("punya istri"))) {
-                addMessage(response, false);
+            if (!found && inputText.length > 0) {
+                response = elegantFallback[Math.floor(Math.random() * elegantFallback.length)];
             }
 
-            playNotification();
+            setTimeout(() => {
+                addMessage(response, false);
+                playNotification();
+            }, 500);
         }, 1000 + Math.random() * 1000);
     }
 
